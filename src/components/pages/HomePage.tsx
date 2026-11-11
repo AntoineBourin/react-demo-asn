@@ -1,6 +1,7 @@
-import { Link, useSearchParams } from "react-router";
+import { useSearchParams } from "react-router";
 import Search from "../Search";
 import ThemeSwitch from "../ThemeSwitch";
+import ProjectCard from "../ProjectCard";
 import { useProducts } from "../../hook/useProducts";
 
 export default function HomePage() {
@@ -29,9 +30,7 @@ export default function HomePage() {
       <Search />
       <ul className="product-list">
         {filteredProducts.map((product) => (
-          <li key={product.id}>
-            <Link to={`/products/${product.id}`}>{product.title}</Link>
-          </li>
+          <ProjectCard key={product.id} product={product} />
         ))}
       </ul>
     </div>

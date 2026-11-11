@@ -128,7 +128,7 @@
   gap: 8px;
 }
 
-.product-list li a {
+.project-card a {
   display: block;
   padding: 12px 14px;
   border: 1px solid var(--border);
@@ -137,7 +137,7 @@
   text-decoration: none;
 }
 
-.product-list li a:hover {
+.project-card a:hover {
   border-color: var(--accent-border);
   background: var(--accent-bg);
 }
