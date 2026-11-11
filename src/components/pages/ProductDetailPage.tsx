@@ -2,6 +2,8 @@ import { Link, useParams } from "react-router";
 import { useProduct } from "../../hook/useProduct";
 
 const ProductDetailPage = () => {
+  // useParams permet de récupérer un paramètre d'URL avec react router
+  // (défini dans App, route "/products/:id")
   const { id } = useParams();
   const { product, isLoading, hasError } = useProduct(id);
 

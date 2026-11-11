@@ -13,6 +13,10 @@ export default function HomePage() {
     product.title.toLowerCase().includes(query.toLowerCase()),
   );
 
+  /**
+   * Early-return en cas de chargement, ce JSX est utilisé directement.
+   * Autre possibilité, dans le JSX : {isLoading && <p>Chargement...</p>}
+   */
   if (isLoading) {
     return <p className="status">Chargement...</p>;
   }
