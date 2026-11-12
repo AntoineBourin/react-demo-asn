@@ -4,21 +4,25 @@ const API_URL = import.meta.env.VITE_API_DUMMY_URL;
 
 /** Service dédié pour la récupération de données */
 export const getProducts = async (): Promise<{ products: Product[] }> => {
-  const response = await fetch(`${API_URL}/products`);
+  return fetch(`${API_URL}/products`).then((res) => {
+    if (!res.ok) {
+      throw new Error("");
+    }
 
-  if (!response.ok) {
-    throw new Error("Error occurred");
-  }
-
-  return response.json();
+    return res.json();
+  });
 };
 
 export const getProduct = async (id: string): Promise<Product> => {
-  const response = await fetch(`${API_URL}/products/${id}`);
+  return new Promise((resolve, reject) => {
+    setTimeout(async () => {
+      const response = await fetch(`${API_URL}/products/${id}`);
 
-  if (!response.ok) {
-    throw new Error("Error occurred");
-  }
+      if (!response.ok) {
+        reject("Error occurred");
+      }
 
-  return response.json();
+      resolve(response.json());
+    }, 2000);
+  });
 };

@@ -1,37 +1,40 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
-
-export const formSchema = z.object({
-  firstName: z
-    .string()
-    .max(5, { message: "Maximum de caractères" })
-    .min(2, { message: "Minimum requis" }),
-  lastName: z.string().max(10).min(3),
-  email: z.email(),
-});
-
-type FormType = z.infer<typeof formSchema>;
+import { orderSchema, type OrderType } from "../types/order";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createOrder } from "../lib/api/order";
 
 export default function Form() {
+  const queryClient = useQueryClient();
+  const { mutateAsync } = useMutation({
+    mutationFn: createOrder,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+    },
+  });
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
+    setError,
   } = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(orderSchema),
     mode: "onChange",
   });
-
-  const handleSubmitForm = (formValues) => {
+  const handleSubmitForm = (formValues: OrderType) => {
     console.log(formValues);
+    mutateAsync(formValues);
+    // setError("root")
+    /*
+  fetch("", {
+      method: "POST",
+      body: JSON.stringify(formValues)
+  })
+  
+  */
   };
 
-  console.log(errors);
-  console.log(Object.keys(errors).length > 0);
-  console.log(register("firstName"));
-
+  console.log(isValid, errors);
   return (
     <form onSubmit={handleSubmit(handleSubmitForm)}>
       <label>FirstName</label>
@@ -56,11 +59,7 @@ export default function Form() {
         placeholder="Votre email..."
         {...register("email")}
       />
-      <input
-        type="submit"
-        disabled={Object.keys(errors).length > 0}
-        value="Enregistrer"
-      />
+      <input type="submit" value="Enregistrer" />
     </form>
   );
 }

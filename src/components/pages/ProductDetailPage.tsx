@@ -1,26 +1,28 @@
 import { Link, useParams } from "react-router";
-import { useProduct } from "../../hook/useProduct";
+import { getProduct } from "../../lib/api/products";
+import { lazy, Suspense } from "react";
+import Loading from "../Loading";
+import { ErrorBoundary } from "react-error-boundary";
+
+const ProductElement = lazy(() => import("./ProductElement"));
 
 const ProductDetailPage = () => {
   // useParams permet de récupérer un paramètre d'URL avec react router
   // (défini dans App, route "/products/:id")
   const { id } = useParams();
-  const { product, isLoading, hasError } = useProduct(id);
-
-  if (isLoading) {
-    return <p className="status">Chargement...</p>;
-  }
-
-  if (hasError || !product) {
-    return <p className="status error">Une erreur est survenue</p>;
-  }
+  const productPromise = getProduct(id);
 
   return (
     <div className="page">
       <Link to="/" className="back-link">
         ← Retour
       </Link>
-      <h1>{product.title}</h1>
+      <ErrorBoundary fallback={<p>Une erreur est survenue</p>}>
+        <Suspense fallback={<Loading />}>
+          <ProductElement productPromise={productPromise} />
+        </Suspense>
+      </ErrorBoundary>
+
       <p className="product-id">Product page {id}</p>
     </div>
   );

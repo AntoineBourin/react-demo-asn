@@ -2,15 +2,24 @@ import { useSearchParams } from "react-router";
 import Search from "../Search";
 import ThemeSwitch from "../ThemeSwitch";
 import ProjectCard from "../ProjectCard";
-import { useProducts } from "../../hook/useProducts";
 import TodoList from "../TodoList";
+import { useQuery } from "@tanstack/react-query";
+import { getProducts } from "../../lib/api/products";
 
 export default function HomePage() {
-  const { products, isLoading, hasError } = useProducts();
+  // const { products, isLoading, hasError } = useProducts();
+  const {
+    data,
+    isLoading,
+    isError: hasError,
+  } = useQuery({
+    queryKey: ["products"],
+    queryFn: getProducts,
+  });
   const [searchParams] = useSearchParams();
   const query = searchParams.get("query") ?? "";
 
-  const filteredProducts = products.filter((product) =>
+  const filteredProducts = data?.products?.filter((product) =>
     product.title.toLowerCase().includes(query.toLowerCase()),
   );
 
@@ -35,7 +44,7 @@ export default function HomePage() {
       </div>
       <Search />
       <ul className="product-list">
-        {filteredProducts.map((product) => (
+        {(filteredProducts || []).map((product) => (
           <ProjectCard key={product.id} product={product} />
         ))}
       </ul>
