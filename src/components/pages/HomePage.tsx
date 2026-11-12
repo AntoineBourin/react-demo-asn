@@ -3,6 +3,7 @@ import Search from "../Search";
 import ThemeSwitch from "../ThemeSwitch";
 import ProjectCard from "../ProjectCard";
 import { useProducts } from "../../hook/useProducts";
+import TodoList from "../TodoList";
 
 export default function HomePage() {
   const { products, isLoading, hasError } = useProducts();
@@ -30,6 +31,7 @@ export default function HomePage() {
       <div className="page-toolbar">
         <h1>Produits</h1>
         <ThemeSwitch />
+        <TodoList />
       </div>
       <Search />
       <ul className="product-list">
